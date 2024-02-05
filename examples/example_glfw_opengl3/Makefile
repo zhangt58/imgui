@@ -4,7 +4,7 @@
 #
 # You will need GLFW (http://www.glfw.org):
 # Linux:
-#   apt-get install libglfw-dev
+#   apt-get install libglfw3-dev
 # Mac OS X:
 #   brew install glfw
 # MSYS2:
@@ -27,6 +27,9 @@ CXXFLAGS = -std=c++11 -I$(IMGUI_DIR) -I$(IMGUI_DIR)/backends
 CXXFLAGS += -g -Wall -Wformat
 LIBS =
 
+# cadata header and lib
+CADATA_DIR = ./cadata
+
 ##---------------------------------------------------------------------
 ## OPENGL ES
 ##---------------------------------------------------------------------
@@ -42,19 +45,22 @@ LIBS =
 ifeq ($(UNAME_S), Linux) #LINUX
 	ECHO_MESSAGE = "Linux"
 	LIBS += $(LINUX_GL_LIBS) `pkg-config --static --libs glfw3`
+	LIBS += -lcadata -L$(CADATA_DIR) -Wl,-rpath $(CADATA_DIR)
 
 	CXXFLAGS += `pkg-config --cflags glfw3`
+	CXXFLAGS += -I$(CADATA_DIR) -I$(CADATA_DIR)/include -I$(CADATA_DIR)/include/os/Linux -I$(CADATA_DIR)/include/compiler/gcc
 	CFLAGS = $(CXXFLAGS)
 endif
 
 ifeq ($(UNAME_S), Darwin) #APPLE
-	ECHO_MESSAGE = "Mac OS X"
+	ECHO_MESSAGE = "macOS"
 	LIBS += -framework OpenGL -framework Cocoa -framework IOKit -framework CoreVideo
-	LIBS += -L/usr/local/lib -L/opt/local/lib -L/opt/homebrew/lib
-	#LIBS += -lglfw3
+	LIBS += -L/opt/homebrew/lib
 	LIBS += -lglfw
+	LIBS += -lcadata -L$(CADATA_DIR) -Wl,-rpath $(CADATA_DIR)
 
 	CXXFLAGS += -I/usr/local/include -I/opt/local/include -I/opt/homebrew/include
+	CXXFLAGS += -I$(CADATA_DIR) -I$(CADATA_DIR)/include -I$(CADATA_DIR)/include/os/Darwin -I$(CADATA_DIR)/include/compiler/clang
 	CFLAGS = $(CXXFLAGS)
 endif
 
