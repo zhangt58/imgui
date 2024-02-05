@@ -7,9 +7,11 @@
 // - Documentation        https://dearimgui.com/docs (same as your local docs/ folder).
 // - Introduction, links and more at the top of imgui.cpp
 
+#include "ca.h"
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#include "../../imgui.h"
 #include <stdio.h>
 #define GL_SILENCE_DEPRECATION
 #if defined(IMGUI_IMPL_OPENGL_ES2)
@@ -84,11 +86,24 @@ int main(int, char**)
 
     // Setup Platform/Renderer backends
     ImGui_ImplGlfw_InitForOpenGL(window, true);
+
 #ifdef __EMSCRIPTEN__
     ImGui_ImplGlfw_InstallEmscriptenCanvasResizeCallback("#canvas");
 #endif
     ImGui_ImplOpenGL3_Init(glsl_version);
 
+// font, scale, dpi, etc.
+#if defined(__APPLE__)
+    const float defaultFontSize = 12.0f;
+#else
+    const float defaultFontSize = 24.0f;
+#endif
+    io.Fonts->AddFontFromFileTTF("../fonts/Menlo-Regular.ttf", defaultFontSize);
+    // ImFontConfig font_cfg;
+    // font_cfg.SizePixels = 12.0f;
+    // io.Fonts->AddFontDefault(&font_cfg);
+
+    // ImGui::GetStyle().ScaleAllSizes(2);
     // Load Fonts
     // - If no fonts are loaded, dear imgui will use the default font. You can also load multiple fonts and use ImGui::PushFont()/PopFont() to select them.
     // - AddFontFromFileTTF() will return the ImFont* so you can store it if you need to select the font among multiple.
@@ -110,6 +125,13 @@ int main(int, char**)
     bool show_demo_window = true;
     bool show_another_window = false;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
+    // PV name and value
+    const char *pv_name = "tong:ai1";
+    double pv_value;
+
+    //
+    ca_monitor((char *)pv_name, &pv_value);
 
     // Main loop
 #ifdef __EMSCRIPTEN__
@@ -156,7 +178,7 @@ int main(int, char**)
             ImGui::SameLine();
             ImGui::Text("counter = %d", counter);
 
-            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+//            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
             ImGui::End();
         }
 
@@ -167,6 +189,11 @@ int main(int, char**)
             ImGui::Text("Hello from another window!");
             if (ImGui::Button("Close Me"))
                 show_another_window = false;
+            // A row of PV name and value
+            ImGui::Text("%s", pv_name);
+            ImGui::SameLine();
+            ImGui::Text("%g", pv_value);
+            //
             ImGui::End();
         }
 
