@@ -11,7 +11,7 @@ int main(int argc, char **argv) {
     double value;
 
     ca_context_create(1);
-    monitor(pvname, &value);
+    ca_monitor(pvname, &value);
     while (1) {
         printf("value -> %g\n", value);
         sleep(1);
