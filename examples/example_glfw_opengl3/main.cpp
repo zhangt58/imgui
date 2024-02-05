@@ -125,16 +125,20 @@ int main(int, char**)
     //IM_ASSERT(font != nullptr);
 
     // Our state
-    bool show_demo_window = true;
-    bool show_another_window = false;
+    bool show_demo_window = false;
+    bool show_data_window = true;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
     // PV name and value
-    const char *pv_name = "tong:ai1";
-    double pv_value;
+    const int nPV = 10;
+    char pv_names[nPV][40];
+    double pv_values[nPV];
 
     //
-    ca_monitor((char *)pv_name, &pv_value);
+    for (int i = 0; i < nPV; i++) {
+        snprintf(pv_names[i], 40, "tong:ai%i", i+1);
+        ca_monitor(pv_names[i], &pv_values[i]);
+    }
 
     // Main loop
 #ifdef __EMSCRIPTEN__
@@ -171,7 +175,7 @@ int main(int, char**)
 
             ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
             ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-            ImGui::Checkbox("Another Window", &show_another_window);
+            ImGui::Checkbox("Data Window", &show_data_window);
 
             ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
             ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
@@ -186,16 +190,20 @@ int main(int, char**)
         }
 
         // 3. Show another simple window.
-        if (show_another_window)
+        if (show_data_window)
         {
-            ImGui::Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-            ImGui::Text("Hello from another window!");
+            ImGui::Begin("Data Window", &show_data_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
+            ImGui::Text("CA Data Window!");
             if (ImGui::Button("Close Me"))
-                show_another_window = false;
-            // A row of PV name and value
-            ImGui::Text("%s", pv_name);
-            ImGui::SameLine();
-            ImGui::Text("%g", pv_value);
+                show_data_window = false;
+
+            // Rows of PV name and value
+            for (int i = 0; i < nPV; i++) {
+                ImGui::Text("%s", pv_names[i]);
+                ImGui::SameLine();
+                ImGui::Text("%g", pv_values[i]);
+            }
+
             //
             ImGui::End();
         }
