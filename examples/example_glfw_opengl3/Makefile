@@ -67,8 +67,11 @@ endif
 ifeq ($(OS), Windows_NT)
 	ECHO_MESSAGE = "MinGW"
 	LIBS += -lglfw3 -lgdi32 -lopengl32 -limm32
+	LIBS += -l:libcadata.dll -L$(CADATA_DIR)
+	LIBS += -l:ca.dll -l:Com.dll -L$(CADATA_DIR)/lib/windows-x64-mingw
 
 	CXXFLAGS += `pkg-config --cflags glfw3`
+	CXXFLAGS += -I$(CADATA_DIR) -I$(CADATA_DIR)/include -I$(CADATA_DIR)/include/os/WIN32 -I$(CADATA_DIR)/include/compiler/gcc -static
 	CFLAGS = $(CXXFLAGS)
 endif
 
