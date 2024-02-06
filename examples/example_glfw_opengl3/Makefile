@@ -105,3 +105,6 @@ run-linux:
 	cp -r $(EXE) fonts $(CADATA_DIR)/libcadata.so dist/linux-x86_64
 	cd dist/linux-x86_64; ./$(EXE)
 
+run-win32:
+	cp -r $(EXE).exe $(CADATA_DIR)/libcadata.dll dist/win32
+	cd dist/win32; ./$(EXE).exe
