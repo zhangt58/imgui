@@ -19,6 +19,7 @@ IMGUI_DIR = ../..
 SOURCES = main.cpp
 SOURCES += $(IMGUI_DIR)/imgui.cpp $(IMGUI_DIR)/imgui_demo.cpp $(IMGUI_DIR)/imgui_draw.cpp $(IMGUI_DIR)/imgui_tables.cpp $(IMGUI_DIR)/imgui_widgets.cpp
 SOURCES += $(IMGUI_DIR)/backends/imgui_impl_glfw.cpp $(IMGUI_DIR)/backends/imgui_impl_opengl3.cpp
+SOURCES += utils.h utils.cpp
 OBJS = $(addsuffix .o, $(basename $(notdir $(SOURCES))))
 UNAME_S := $(shell uname -s)
 LINUX_GL_LIBS = -lGL
@@ -108,3 +109,7 @@ run-linux:
 run-win32:
 	cp -r $(EXE).exe $(CADATA_DIR)/libcadata.dll dist/win32
 	cd dist/win32; ./$(EXE).exe
+
+main:
+	$(CXX) utils.cpp -o main
+	./main
