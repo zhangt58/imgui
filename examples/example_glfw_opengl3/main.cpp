@@ -94,10 +94,11 @@ int main(int, char**)
 
 // font, scale, dpi, etc.
 #if defined(__APPLE__)
-    const float defaultFontSize = 12.0f;
+    const float defaultFontSize = 14.0f;
+    io.Fonts->AddFontFromFileTTF("./fonts/Menlo-Regular.ttf", defaultFontSize);
 #elif defined(__gnu_linux__)
     const float defaultFontSize = 24.0f;
-    // io.Fonts->AddFontFromFileTTF("../fonts/Menlo-Regular.ttf", defaultFontSize);
+    io.Fonts->AddFontFromFileTTF("./fonts/Menlo-Regular.ttf", defaultFontSize);
 #elif defined(_WIN32)
     const float defaultFontSize = 20.0f;
     io.Fonts->AddFontFromFileTTF("./fonts/Menlo-Regular.ttf", defaultFontSize);

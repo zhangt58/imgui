@@ -96,3 +96,12 @@ $(EXE): $(OBJS)
 
 clean:
 	rm -f $(EXE) $(OBJS)
+
+run-darwin:
+	cp -r $(EXE) fonts $(CADATA_DIR)/libcadata.dylib dist/darwin
+	cd dist/darwin; ./$(EXE)
+
+run-linux:
+	cp -r $(EXE) fonts $(CADATA_DIR)/libcadata.so dist/linux-x86_64
+	cd dist/linux-x86_64; ./$(EXE)
+
