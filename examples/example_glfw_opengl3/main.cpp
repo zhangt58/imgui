@@ -19,6 +19,10 @@
 #endif
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
 
+#include "utils.h"
+#include <iostream>
+#include <vector>
+
 // [Win32] Our example includes a copy of glfw3.lib pre-compiled with VS2010 to maximize ease of testing and compatibility with old VS compilers.
 // To link with VS2010-era libraries, VS2015+ requires linking with legacy_stdio_definitions.lib, which we do using this pragma.
 // Your own project should not be affected, as you are likely to link with a newer binary of GLFW that is adequate for your version of Visual Studio.
@@ -100,7 +104,7 @@ int main(int, char**)
     const float defaultFontSize = 24.0f;
     io.Fonts->AddFontFromFileTTF("./fonts/Menlo-Regular.ttf", defaultFontSize);
 #elif defined(_WIN32)
-    const float defaultFontSize = 20.0f;
+    const float defaultFontSize = 16.0f;
     io.Fonts->AddFontFromFileTTF("./fonts/Menlo-Regular.ttf", defaultFontSize);
 #endif
     // ImFontConfig font_cfg;
@@ -131,14 +135,33 @@ int main(int, char**)
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
     // PV name and value
-    const int nPV = 10;
-    char pv_names[nPV][40];
+    #define MAX_NAME_LENGTH 40
+    const int nPV = 5;
+    char pv_names[nPV][MAX_NAME_LENGTH];
     double pv_values[nPV];
 
-    //
+    // local test
+    // for (int i = 0; i < nPV; i++) {
+    //     snprintf(pv_names[i], 40, "tong:ai%i", i+1);
+    //     ca_monitor(pv_names[i], &pv_values[i]);
+    // }
+    snprintf(pv_names[0], MAX_NAME_LENGTH, "%s", "FE_MEBT:BPM_D1056:XPOS_RD");
+    snprintf(pv_names[1], MAX_NAME_LENGTH, "%s", "FE_MEBT:BPM_D1072:XPOS_RD");
+    snprintf(pv_names[2], MAX_NAME_LENGTH, "%s", "FE_MEBT:BPM_D1094:XPOS_RD");
+    snprintf(pv_names[3], MAX_NAME_LENGTH, "%s", "FE_MEBT:BPM_D1111:XPOS_RD");
+    snprintf(pv_names[4], MAX_NAME_LENGTH, "%s", "LS1_CA01:BPM_D1129:XPOS_RD");
     for (int i = 0; i < nPV; i++) {
-        snprintf(pv_names[i], 40, "tong:ai%i", i+1);
         ca_monitor(pv_names[i], &pv_values[i]);
+    }
+
+    std::vector< std::vector<std::string> > bpmData = readCSV("bpm/bpm-data.csv");
+    int nBPM = bpmData.size();
+    double pv_values1[nBPM][4];
+    for (int i = 0; i < nBPM; i++) {
+        for (int j = 0; j < 4; j++) {
+            std::cout << "monitor: " << bpmData[i][j] << std::endl;
+            ca_monitor((char *) bpmData[i][j].c_str(), &pv_values1[i][j]);
+        }
     }
 
     // Main loop
@@ -194,15 +217,15 @@ int main(int, char**)
         if (show_data_window)
         {
             ImGui::Begin("Data Window", &show_data_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-            ImGui::Text("CA Data Window!");
-            if (ImGui::Button("Close Me"))
-                show_data_window = false;
+            ImGui::Text("BPM Signals");
+            // if (ImGui::Button("Close Me"))
+            //     show_data_window = false;
 
             // Rows of PV name and value
             for (int i = 0; i < nPV; i++) {
-                ImGui::Text("%s", pv_names[i]);
+                ImGui::Text("%26s", pv_names[i]);
                 ImGui::SameLine();
-                ImGui::Text("%g", pv_values[i]);
+                ImGui::Text("%10.3f mm", pv_values[i]);
             }
 
             //
