@@ -101,6 +101,6 @@ void ca_monitor(char *pvname, double *pvalue) {
     }
     res = ca_create_channel(pvname, connectionCallback_, pvalue, 0, &chanid);
     if (res != ECA_NORMAL) {
-        printf("[%s] CA create channel failed.", pvname);
+        printf("[%s] CA create channel failed: %s\n", pvname, ca_message(res));
     }
 }
