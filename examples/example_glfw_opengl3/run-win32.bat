@@ -1,6 +1,6 @@
 @ECHO OFF
 SET EPICS_CA_AUTO_ADDR_LIST=YES
 
-copy example_glfw_opengl3.exe dist\
-cd dist
+copy example_glfw_opengl3.exe dist\win32
+cd dist\win32\
 example_glfw_opengl3
