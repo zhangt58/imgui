@@ -29,9 +29,8 @@ main:
 	$(CC) main.o ca.o $(LDFLAGS) -o main
 
 $(CADATA_LIBNAME): ca.c ca.h
-	# $(CC) -c -fPIC ca.c -o ca.o $(CFLAGS)
-	$(CC) -c ca.c -o ca.o $(CFLAGS)
-	# ar crf libcadata.a ca.o
+	$(CC) -c -fPIC ca.c -o ca.o $(CFLAGS)
+	# $(CC) -c ca.c -o ca.o $(CFLAGS)
 	$(CC) -shared ca.o -o $@ $(LDFLAGS)
 	
 fix:
