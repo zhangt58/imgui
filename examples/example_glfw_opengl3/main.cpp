@@ -217,13 +217,13 @@ int main(int, char**)
         // 3. Show another simple window.
         if (show_data_window)
         {
-            ImGui::Begin("Data Window", &show_data_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
+            ImGui::Begin("Beam Position Monitors", &show_data_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
             
             // if (ImGui::Button("Close Me"))
             //     show_data_window = false;
 
             // Head row, Name, XPOS, YPOS, PHASE, MAG
-            ImGui::Text("%24s", "BPM Name");
+            ImGui::Text("%24s", "Device Name");
             ImGui::SameLine();
             ImGui::Text("%10s", "XPOS [mm]");
             ImGui::SameLine();
@@ -232,6 +232,8 @@ int main(int, char**)
             ImGui::Text("%10s", "PHA [deg]");
             ImGui::SameLine();
             ImGui::Text("%10s", "MAG [mVpp]");
+            
+            ImGui::Separator();
 
             // Rows of PV name and value
             for (int i = 0; i < nBPM; i++) {
