@@ -8,7 +8,7 @@ const char *connState[] = {"Never", "Previously", "Connected", "Closed"};
 
 PVResult *eventDataCast(struct event_handler_args *args)
 {
-    chid chan = args->chid;
+    // chid chan = args->chid;
     long dbrType = args->type;
     long nelem = args->count;
     size_t elem_size;
@@ -73,6 +73,7 @@ static void eventCallback_(struct event_handler_args args) {
     PVResult *pRes = eventDataCast(&args);
     // printf("Event %s -> %g\n", (char *) ca_name(args.chid), *(dbr_double_t *)pRes->pdata);
     *pvalue = *(dbr_double_t *) pRes->pdata;
+    free(pRes->pdata);
     free(pRes);
 }
 
@@ -84,13 +85,12 @@ static void connectionCallback_(struct connection_handler_args args) {
     int dbfType = ca_field_type(chanid);
     int nelem = ca_element_count(chanid);
     long op = args.op;
-    int res;
+    // int res;
     if (op == CA_OP_CONN_UP) {
-        res = ca_create_subscription(dbfType, nelem, chanid, DBE_VALUE | DBE_ALARM, eventCallback_, pvalue, &evtid);
+        ca_create_subscription(dbfType, nelem, chanid, DBE_VALUE | DBE_ALARM, eventCallback_, pvalue, &evtid);
     } else {
         printf("%s is disconnected [%s]\n", pvname, connState[ca_state(chanid)]);
     }
-    free(pvname);
 }
 
 // set up monitoring a PV
