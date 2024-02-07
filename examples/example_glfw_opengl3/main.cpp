@@ -98,7 +98,7 @@ int main(int, char**)
 
 // font, scale, dpi, etc.
 #if defined(__APPLE__)
-    const float defaultFontSize = 14.0f;
+    const float defaultFontSize = 13.0f;
     io.Fonts->AddFontFromFileTTF("./fonts/Menlo-Regular.ttf", defaultFontSize);
 #elif defined(__gnu_linux__)
     const float defaultFontSize = 24.0f;
@@ -132,35 +132,36 @@ int main(int, char**)
     // Our state
     bool show_demo_window = false;
     bool show_data_window = true;
-    ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    ImVec4 clear_color = ImVec4(0.07f, 0.07f, 0.07f, 0.8f);
 
     // PV name and value
     #define MAX_NAME_LENGTH 40
-    const int nPV = 5;
-    char pv_names[nPV][MAX_NAME_LENGTH];
-    double pv_values[nPV];
+    // const int nPV = 5;
+    // char pv_names[nPV][MAX_NAME_LENGTH];
+    // double pv_values[nPV];
 
     // local test
     // for (int i = 0; i < nPV; i++) {
     //     snprintf(pv_names[i], 40, "tong:ai%i", i+1);
     //     ca_monitor(pv_names[i], &pv_values[i]);
     // }
-    snprintf(pv_names[0], MAX_NAME_LENGTH, "%s", "FE_MEBT:BPM_D1056:XPOS_RD");
-    snprintf(pv_names[1], MAX_NAME_LENGTH, "%s", "FE_MEBT:BPM_D1072:XPOS_RD");
-    snprintf(pv_names[2], MAX_NAME_LENGTH, "%s", "FE_MEBT:BPM_D1094:XPOS_RD");
-    snprintf(pv_names[3], MAX_NAME_LENGTH, "%s", "FE_MEBT:BPM_D1111:XPOS_RD");
-    snprintf(pv_names[4], MAX_NAME_LENGTH, "%s", "LS1_CA01:BPM_D1129:XPOS_RD");
-    for (int i = 0; i < nPV; i++) {
-        ca_monitor(pv_names[i], &pv_values[i]);
-    }
+    // snprintf(pv_names[0], MAX_NAME_LENGTH, "%s", "FE_MEBT:BPM_D1056:XPOS_RD");
+    // snprintf(pv_names[1], MAX_NAME_LENGTH, "%s", "FE_MEBT:BPM_D1072:XPOS_RD");
+    // snprintf(pv_names[2], MAX_NAME_LENGTH, "%s", "FE_MEBT:BPM_D1094:XPOS_RD");
+    // snprintf(pv_names[3], MAX_NAME_LENGTH, "%s", "FE_MEBT:BPM_D1111:XPOS_RD");
+    // snprintf(pv_names[4], MAX_NAME_LENGTH, "%s", "LS1_CA01:BPM_D1129:XPOS_RD");
+    // for (int i = 0; i < nPV; i++) {
+    //     ca_monitor(pv_names[i], &pv_values[i]);
+    // }
 
-    std::vector< std::vector<std::string> > bpmData = readCSV("bpm/bpm-data.csv");
+    // name, pv of xpos, ypos, phase and mag
+    std::vector< std::vector<std::string> > bpmData = readCSV("../data/bpm-data.csv");
     int nBPM = bpmData.size();
-    double pv_values1[nBPM][4];
+    double pv_values[nBPM][4];
     for (int i = 0; i < nBPM; i++) {
         for (int j = 0; j < 4; j++) {
-            std::cout << "monitor: " << bpmData[i][j] << std::endl;
-            ca_monitor((char *) bpmData[i][j].c_str(), &pv_values1[i][j]);
+            // std::cout << "monitor: " << bpmData[i][j+1] << std::endl;
+            ca_monitor((char *) bpmData[i][j+1].c_str(), &pv_values[i][j]);
         }
     }
 
@@ -217,15 +218,37 @@ int main(int, char**)
         if (show_data_window)
         {
             ImGui::Begin("Data Window", &show_data_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-            ImGui::Text("BPM Signals");
+            
             // if (ImGui::Button("Close Me"))
             //     show_data_window = false;
 
+            // Head row, Name, XPOS, YPOS, PHASE, MAG
+            ImGui::Text("%24s", "BPM Name");
+            ImGui::SameLine();
+            ImGui::Text("%10s", "XPOS [mm]");
+            ImGui::SameLine();
+            ImGui::Text("%10s", "YPOS [mm]");
+            ImGui::SameLine();
+            ImGui::Text("%10s", "PHA [deg]");
+            ImGui::SameLine();
+            ImGui::Text("%10s", "MAG [mVpp]");
+
             // Rows of PV name and value
-            for (int i = 0; i < nPV; i++) {
-                ImGui::Text("%26s", pv_names[i]);
+            for (int i = 0; i < nBPM; i++) {
+                // Name
+                ImGui::Text("%24s", bpmData[i][0].c_str());
+                // XPOS
                 ImGui::SameLine();
-                ImGui::Text("%10.3f mm", pv_values[i]);
+                ImGui::Text("%10.3f", pv_values[i][0]);
+                // YPOS
+                ImGui::SameLine();
+                ImGui::Text("%10.3f", pv_values[i][1]);
+                // PHASE
+                ImGui::SameLine();
+                ImGui::Text("%10.2f", pv_values[i][2]);
+                // MAG
+                ImGui::SameLine();
+                ImGui::Text("%10.2f", pv_values[i][3]);
             }
 
             //
