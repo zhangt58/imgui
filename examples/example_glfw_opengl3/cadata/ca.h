@@ -14,6 +14,7 @@ extern "C" {
 #endif
 
 void ca_monitor(char *, double *);
+void clean_monitor();
 
 // Data struct for storing event data
 typedef struct {

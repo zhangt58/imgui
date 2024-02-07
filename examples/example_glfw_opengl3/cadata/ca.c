@@ -72,7 +72,7 @@ static void eventCallback_(struct event_handler_args args) {
     double *pvalue = args.usr;
     PVResult *pRes = eventDataCast(&args);
     // printf("Event %s -> %g\n", (char *) ca_name(args.chid), *(dbr_double_t *)pRes->pdata);
-    *pvalue = *(dbr_double_t *)pRes->pdata;
+    *pvalue = *(dbr_double_t *) pRes->pdata;
     free(pRes);
 }
 
@@ -90,6 +90,7 @@ static void connectionCallback_(struct connection_handler_args args) {
     } else {
         printf("%s is disconnected [%s]\n", pvname, connState[ca_state(chanid)]);
     }
+    free(pvname);
 }
 
 // set up monitoring a PV
@@ -103,4 +104,8 @@ void ca_monitor(char *pvname, double *pvalue) {
     if (res != ECA_NORMAL) {
         printf("[%s] CA create channel failed: %s\n", pvname, ca_message(res));
     }
+}
+
+void clean_monitor() {
+    ca_context_destroy();
 }

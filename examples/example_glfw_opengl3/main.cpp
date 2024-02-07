@@ -273,6 +273,7 @@ int main(int, char**)
 #endif
 
     // Cleanup
+    clean_monitor();
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
